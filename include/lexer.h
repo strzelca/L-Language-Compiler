@@ -8,17 +8,18 @@
 #include <token.h>
 
 static int curTok;
+static FILE *src;
 
 static int gettok() {
   static int lastChar = ' ';
 
   while (isspace(lastChar))
-    lastChar = getchar();
+    lastChar = getc(src);
 
   if (isalpha(lastChar)) {
     IdStr = lastChar;
 
-    while (isalnum(lastChar = getchar()))
+    while (isalnum(lastChar = getc(src)))
       IdStr += lastChar;
 
     if (IdStr == "if")
@@ -36,9 +37,10 @@ static int gettok() {
   }
 
   if (isdigit(lastChar) || lastChar == '.') {
+    ValStr = "";
     do {
       ValStr += lastChar;
-      lastChar = getchar();
+      lastChar = getc(src);
     } while (isdigit(lastChar) || lastChar == '.');
 
     ValNum = strtod(ValStr.c_str(), 0);
@@ -47,7 +49,7 @@ static int gettok() {
 
   if (lastChar == '#') {
     do
-      lastChar = getchar();
+      lastChar = getc(src);
     while (lastChar != EOF && lastChar != '\n' && lastChar != '\r');
 
     if (lastChar != EOF)
@@ -58,7 +60,7 @@ static int gettok() {
     return tok_eof;
 
   int thisChar = lastChar;
-  lastChar = getchar();
+  lastChar = getc(src);
   return thisChar;
 }
 

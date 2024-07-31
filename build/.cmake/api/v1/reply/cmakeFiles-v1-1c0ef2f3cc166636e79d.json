@@ -311,9 +311,6 @@
 		{
 			"isExternal" : true,
 			"path" : "/opt/homebrew/opt/llvm/lib/cmake/llvm/LLVM-Config.cmake"
-		},
-		{
-			"path" : "src/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",

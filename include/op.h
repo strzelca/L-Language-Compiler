@@ -1,7 +1,7 @@
 #ifndef OP_H
 #define OP_H
 
-#include "tok.h"
+#include "lexer.h"
 #include <_ctype.h>
 #include <map>
 enum BOP {
@@ -24,7 +24,7 @@ static int getTokPrecedence() {
 
   int tokPrec = BopPrecedence[curTok];
   if (tokPrec <= 0)
-    return 1;
+    return -1;
   return tokPrec;
 }
 

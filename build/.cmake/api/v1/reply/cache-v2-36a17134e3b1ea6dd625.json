@@ -799,7 +799,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "2"
+			"value" : "1"
 		},
 		{
 			"name" : "CMAKE_OBJCOPY",
@@ -1463,7 +1463,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/polina/Code/L_Language_Compiler/build/src"
+			"value" : "/Users/polina/Code/L_Language_Compiler/build"
 		},
 		{
 			"name" : "LLanguageCompiler_IS_TOP_LEVEL",
@@ -1475,7 +1475,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "OFF"
+			"value" : "ON"
 		},
 		{
 			"name" : "LLanguageCompiler_SOURCE_DIR",
@@ -1487,7 +1487,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/polina/Code/L_Language_Compiler/src"
+			"value" : "/Users/polina/Code/L_Language_Compiler"
 		},
 		{
 			"name" : "LibEdit_INCLUDE_DIRS",

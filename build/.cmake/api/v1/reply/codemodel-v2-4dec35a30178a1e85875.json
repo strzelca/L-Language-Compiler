@@ -6,10 +6,6 @@
 			[
 				{
 					"build" : ".",
-					"childIndexes" : 
-					[
-						1
-					],
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
@@ -22,23 +18,8 @@
 						0,
 						1,
 						2,
-						4,
-						5
-					]
-				},
-				{
-					"build" : "src",
-					"jsonFile" : "directory-src-Debug-b6cf2213fc5053b67c22.json",
-					"minimumCMakeVersion" : 
-					{
-						"string" : "3.28.3"
-					},
-					"parentIndex" : 0,
-					"projectIndex" : 0,
-					"source" : "src",
-					"targetIndexes" : 
-					[
-						3
+						3,
+						4
 					]
 				}
 			],
@@ -48,8 +29,7 @@
 				{
 					"directoryIndexes" : 
 					[
-						0,
-						1
+						0
 					],
 					"name" : "LLanguageCompiler",
 					"targetIndexes" : 
@@ -58,8 +38,7 @@
 						1,
 						2,
 						3,
-						4,
-						5
+						4
 					]
 				}
 			],
@@ -82,15 +61,8 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "compiler::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-compiler-Debug-82e2b78e5cc4457beeac.json",
+					"jsonFile" : "target-compiler-Debug-7bbf476c6622189f4bfc.json",
 					"name" : "compiler",
-					"projectIndex" : 0
-				},
-				{
-					"directoryIndex" : 1,
-					"id" : "components::@145eef247bfb46b6828c",
-					"jsonFile" : "target-components-Debug-d12a0cea2f0c6ad5f8b4.json",
-					"name" : "components",
 					"projectIndex" : 0
 				},
 				{

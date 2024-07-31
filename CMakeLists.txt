@@ -12,22 +12,18 @@ message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
 include_directories(
-  /usr/local/include
-  /opt/homebrew/opt/llvm/include/c++/v1
   ${LLVM_INCLUDE_DIRS}
+  include
 )
 
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
-add_subdirectory(src)
-
 add_executable(compiler main.cpp)
 
-llvm_map_components_to_libnames(llvm_libs support core irreader)
+llvm_map_components_to_libnames(llvm_libs support core orcjit native irreader)
 
 target_link_libraries(
   compiler
-  components
   ${llvm_libs}
 )

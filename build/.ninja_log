@@ -2,12 +2,12 @@
 1	522	1721845309587846725	src/CMakeFiles/components.dir/dummy.cpp.o.ddi	a7b427d652f1a020
 531	562	1721845310118411475	src/CMakeFiles/components.dir/dummy.cpp.o	7ddfb2633a440daa
 1778	1786	1721846456136711430	src/CMakeFiles/components.dir/tok.cpp.o.modmap	afbcdbde15403bee
-522	531	1721845310108578805	CMakeFiles/compiler.dir/main.cpp.o.modmap	353bff45415e9c22
-522	531	1721845310108578805	CMakeFiles/compiler.dir/CXX.dd	353bff45415e9c22
-522	531	1721845310108578805	/Users/polina/Code/L_Language_Compiler/build/CMakeFiles/compiler.dir/CXXModules.json	353bff45415e9c22
+514	527	1721895001219180709	CMakeFiles/compiler.dir/main.cpp.o.modmap	353bff45415e9c22
+514	527	1721895001219180709	CMakeFiles/compiler.dir/CXX.dd	353bff45415e9c22
+514	527	1721895001219180709	/Users/polina/Code/L_Language_Compiler/build/CMakeFiles/compiler.dir/CXXModules.json	353bff45415e9c22
 1778	1786	1721846456136711430	src/CMakeFiles/components.dir/CXX.dd	afbcdbde15403bee
 1778	1786	1721846456136711430	src/CMakeFiles/components.dir/dummy.cpp.o.modmap	afbcdbde15403bee
-1	522	1721845309588183694	CMakeFiles/compiler.dir/main.cpp.o.ddi	b374e0bb442bb48f
+1	514	1721895000706046731	CMakeFiles/compiler.dir/main.cpp.o.ddi	ba59d8cc0e1e57b9
 1778	1786	1721846456136711430	/Users/polina/Code/L_Language_Compiler/build/src/CMakeFiles/components.dir/CXXModules.json	afbcdbde15403bee
 22	1778	1721846454380837198	src/CMakeFiles/components.dir/tok.cpp.o.ddi	e21a15f45e42f8eb
-531	562	1721845310117786581	CMakeFiles/compiler.dir/main.cpp.o	11d892726987451e
+527	3863	1721895001232351348	CMakeFiles/compiler.dir/main.cpp.o	68da470f6958a743

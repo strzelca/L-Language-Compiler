@@ -3,12 +3,11 @@
 
 #include "ast.h"
 #include "error_handler.h"
+#include "lexer.h"
 #include "op.h"
-#include "tok.h"
+#include "store.h"
 #include "token.h"
-#include <algorithm>
 #include <memory>
-#include <store.h>
 
 static std::unique_ptr<ExprAST> ParsePrimary();
 
@@ -20,7 +19,7 @@ static std::unique_ptr<ExprAST> ParseBinOpRHS(int exprPrec,
     if (tokPrec < exprPrec)
       return LHS;
 
-    int binOp = curTok;
+    char binOp = curTok;
     getNextToken();
 
     auto RHS = ParsePrimary();
@@ -107,11 +106,11 @@ static std::unique_ptr<ExprAST> ParsePrimary() {
   default:
     return LogError("Unknown token while expecting expression");
   case tok_id:
-    ParseIdentifierExpr();
+    return ParseIdentifierExpr();
   case tok_val:
-    ParseNumberExpr();
+    return ParseNumberExpr();
   case '(':
-    ParseParenExpr();
+    return ParseParenExpr();
   }
 }
 
@@ -128,8 +127,13 @@ static std::unique_ptr<PrototypeAST> ParsePrototype() {
 
   // Read the list of argument names.
   std::vector<std::string> ArgNames;
-  while (getNextToken() == tok_id)
+  while (getNextToken() == tok_id) {
     ArgNames.push_back(IdStr);
+    getNextToken();
+    if (curTok != ',')
+      break;
+  }
+
   if (curTok != ')')
     return LogErrorP("Expected ')' in prototype");
 
@@ -152,8 +156,8 @@ static std::unique_ptr<FunctionAST> ParseDefinition() {
 
 static std::unique_ptr<FunctionAST> ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
-    // Make an anonymous proto.
-    auto Proto = std::make_unique<PrototypeAST>("", std::vector<std::string>());
+    auto Proto =
+        std::make_unique<PrototypeAST>("main", std::vector<std::string>());
     return std::make_unique<FunctionAST>(std::move(Proto), std::move(E));
   }
   return nullptr;
