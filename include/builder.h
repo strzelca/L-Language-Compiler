@@ -5,6 +5,8 @@
 #include "error_handler.h"
 #include "jit.h"
 #include "op.h"
+#include "llvm/ADT/SmallVector.h"
+#include "llvm/IR/Instruction.h"
 #include <iostream>
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
@@ -19,6 +21,7 @@
 #include <map>
 #include <memory>
 #include <utility>
+#include <vector>
 
 using namespace llvm;
 
@@ -44,7 +47,7 @@ static void InitializeModule() {
   // Open a new context and module.
   context = std::make_unique<LLVMContext>();
   module = std::make_unique<Module>("L Language JIT Compiler", *context);
-  // module->setDataLayout(jit->getDataLayout());
+  module->setDataLayout(jit->getDataLayout());
 
   // Create a new builder for the module.
   builder = std::make_unique<IRBuilder<>>(*context);
@@ -152,6 +155,7 @@ Function *FunctionAST::codegen() {
   auto &P = *Proto;
   functionProtos[Proto->getId()] = std::move(Proto);
   Function *func = getFunction(P.getId());
+
   if (!func)
     return nullptr;
 

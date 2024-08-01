@@ -24,10 +24,14 @@ enum Token {
   tok_const = -10,
   tok_var = -11,
   tok_fun = -12,
-  tok_form = -13
+  tok_form = -13,
 
   // form
   // form ::= const Id: T, form | var Id: T, form
+
+  // extern
+  // extern ::= extern Id(form);
+  tok_extern = -14
 
   // ae
   // ae ::= E, ae

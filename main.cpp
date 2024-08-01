@@ -20,6 +20,9 @@ static void mainLoop() {
     case tok_fun:
       HandleFunction();
       break;
+    case tok_extern:
+      HandleExtern();
+      break;
     default:
       HandleTopLevelExpression();
       break;

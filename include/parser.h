@@ -7,6 +7,7 @@
 #include "op.h"
 #include "store.h"
 #include "token.h"
+#include <cstddef>
 #include <memory>
 
 static std::unique_ptr<ExprAST> ParsePrimary();
@@ -67,6 +68,20 @@ static std::unique_ptr<ExprAST> ParseParenExpr() {
   return V;
 }
 
+static std::unique_ptr<ExprAST> ParseBracketsExpr() {
+  getNextToken();
+  auto E = ParseExpression();
+
+  if (!E)
+    return nullptr;
+
+  getNextToken();
+  if (curTok != '}')
+    getNextToken();
+  getNextToken();
+  return E;
+}
+
 // E ::= Id | Id(ae)
 static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   std::string Id = IdStr;
@@ -100,6 +115,14 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   return std::make_unique<CallExprAST>(Id, std::move(Args));
 }
 
+static std::unique_ptr<ExprAST> ParseReturnExpr() {
+  getNextToken();
+  auto E = ParsePrimary();
+  if (!E)
+    return nullptr;
+  return E;
+}
+
 // PROG ::= E
 static std::unique_ptr<ExprAST> ParsePrimary() {
   switch (curTok) {
@@ -109,8 +132,12 @@ static std::unique_ptr<ExprAST> ParsePrimary() {
     return ParseIdentifierExpr();
   case tok_val:
     return ParseNumberExpr();
+  case tok_return:
+    return ParseReturnExpr();
   case '(':
     return ParseParenExpr();
+  case '{':
+    return ParseBracketsExpr();
   }
 }
 
@@ -149,15 +176,23 @@ static std::unique_ptr<FunctionAST> ParseDefinition() {
   if (!proto)
     return nullptr;
 
-  if (auto E = ParseExpression())
-    return std::make_unique<FunctionAST>(std::move(proto), std::move(E));
-  return nullptr;
+  auto E = ParseBracketsExpr();
+
+  if (!E)
+    return nullptr;
+
+  return std::make_unique<FunctionAST>(std::move(proto), std::move(E));
+}
+
+static std::unique_ptr<PrototypeAST> ParseExtern() {
+  getNextToken();
+  return ParsePrototype();
 }
 
 static std::unique_ptr<FunctionAST> ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
     auto Proto =
-        std::make_unique<PrototypeAST>("main", std::vector<std::string>());
+        std::make_unique<PrototypeAST>("_main", std::vector<std::string>());
     return std::make_unique<FunctionAST>(std::move(Proto), std::move(E));
   }
   return nullptr;

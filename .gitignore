@@ -13,3 +13,6 @@ CMakeUserPresets.json
 .cache
 .vscode
 out
+build
+.ninja_deps
+.ninja_log

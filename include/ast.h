@@ -1,6 +1,10 @@
 #ifndef AST_H
 #define AST_H
 
+#include "builder.h"
+#include "llvm/ADT/SmallVector.h"
+#include "llvm/IR/Instruction.h"
+#include "llvm/IR/Instructions.h"
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Function.h>
 #include <memory>

@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <store.h>
 #include <token.h>
 
@@ -32,6 +33,10 @@ static int gettok() {
       return tok_var;
     if (IdStr == "function")
       return tok_fun;
+    if (IdStr == "extern")
+      return tok_extern;
+    if (IdStr == "return")
+      return tok_return;
 
     return tok_id;
   }
@@ -64,6 +69,17 @@ static int gettok() {
   return thisChar;
 }
 
-static int getNextToken() { return curTok = gettok(); }
+static int getNextToken() {
+#ifdef _INFO_TOK
+  curTok = gettok();
+  if (curTok > 0)
+    fprintf(stderr, "%c\n", curTok);
+  else
+    fprintf(stderr, "%d\n", curTok);
+  return curTok;
+#else
+  return curTok = gettok();
+#endif
+}
 
 #endif
