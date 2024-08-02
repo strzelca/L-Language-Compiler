@@ -1,9 +1,6 @@
 #ifndef AST_H
 #define AST_H
 
-#include "builder.h"
-#include "llvm/ADT/SmallVector.h"
-#include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Function.h>
@@ -91,6 +88,27 @@ public:
       return Id;
     return Proto->getId();
   }
+};
+
+class IfExprAST : public ExprAST {
+  std::unique_ptr<ExprAST> Cond, Then, Else;
+
+public:
+  IfExprAST(std::unique_ptr<ExprAST> Cond, std::unique_ptr<ExprAST> Then,
+            std::unique_ptr<ExprAST> Else)
+      : Cond(std::move(Cond)), Then(std::move(Then)), Else(std::move(Else)) {}
+
+  llvm::Value *codegen() override;
+};
+
+class WhileExprAST : public ExprAST {
+  std::unique_ptr<ExprAST> Cond, Body;
+
+public:
+  WhileExprAST(std::unique_ptr<ExprAST> Cond, std::unique_ptr<ExprAST> Body)
+      : Cond(std::move(Cond)), Body(std::move(Body)) {}
+
+  llvm::Value *codegen() override;
 };
 
 #endif

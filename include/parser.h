@@ -7,7 +7,7 @@
 #include "op.h"
 #include "store.h"
 #include "token.h"
-#include <cstddef>
+#include <cstdio>
 #include <memory>
 
 static std::unique_ptr<ExprAST> ParsePrimary();
@@ -75,7 +75,6 @@ static std::unique_ptr<ExprAST> ParseBracketsExpr() {
   if (!E)
     return nullptr;
 
-  getNextToken();
   if (curTok != '}')
     getNextToken();
   getNextToken();
@@ -115,6 +114,68 @@ static std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   return std::make_unique<CallExprAST>(Id, std::move(Args));
 }
 
+// C ::= if (E) {C} [else {C}]
+static std::unique_ptr<ExprAST> ParseIfExpr() {
+  getNextToken(); // eat the if.
+
+  if (curTok != '(')
+    return nullptr;
+
+  getNextToken();
+
+  // condition.
+  auto cond = ParseExpression();
+  if (!cond)
+    return nullptr;
+
+  if (curTok != ')')
+    return nullptr;
+
+  getNextToken();
+
+  auto then = ParseBracketsExpr();
+  if (!then)
+    return nullptr;
+
+  if (curTok != tok_else)
+    return LogError("expected else");
+
+  getNextToken();
+
+  auto _else = ParseBracketsExpr();
+  if (!_else)
+    return nullptr;
+
+  return std::make_unique<IfExprAST>(std::move(cond), std::move(then),
+                                     std::move(_else));
+}
+
+// C ::= while (E) {C}
+static std::unique_ptr<ExprAST> ParseWhileExpr() {
+  getNextToken(); // eat the while.
+
+  if (curTok != '(')
+    return nullptr;
+
+  getNextToken();
+
+  // condition.
+  auto cond = ParseExpression();
+  if (!cond)
+    return nullptr;
+
+  if (curTok != ')')
+    return nullptr;
+
+  getNextToken();
+
+  auto body = ParseBracketsExpr();
+  if (!body)
+    return nullptr;
+
+  return std::make_unique<WhileExprAST>(std::move(cond), std::move(body));
+}
+
 static std::unique_ptr<ExprAST> ParseReturnExpr() {
   getNextToken();
   auto E = ParsePrimary();
@@ -127,11 +188,16 @@ static std::unique_ptr<ExprAST> ParseReturnExpr() {
 static std::unique_ptr<ExprAST> ParsePrimary() {
   switch (curTok) {
   default:
+    printf("%c\n", curTok);
     return LogError("Unknown token while expecting expression");
   case tok_id:
     return ParseIdentifierExpr();
   case tok_val:
     return ParseNumberExpr();
+  case tok_if:
+    return ParseIfExpr();
+  case tok_while:
+    return ParseWhileExpr();
   case tok_return:
     return ParseReturnExpr();
   case '(':

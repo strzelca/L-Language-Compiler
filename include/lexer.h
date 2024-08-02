@@ -4,7 +4,6 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <store.h>
 #include <token.h>
 
@@ -25,6 +24,8 @@ static int gettok() {
 
     if (IdStr == "if")
       return tok_if;
+    if (IdStr == "else")
+      return tok_else;
     if (IdStr == "while")
       return tok_while;
     if (IdStr == "const")

@@ -1,13 +1,11 @@
 #ifndef BUILDER_H
 #define BUILDER_H
 
-#include "ast.h"
 #include "error_handler.h"
 #include "jit.h"
 #include "op.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/IR/Instruction.h"
-#include <iostream>
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Verifier.h>
@@ -177,6 +175,88 @@ Function *FunctionAST::codegen() {
 
   func->eraseFromParent();
   return nullptr;
+}
+
+Value *IfExprAST::codegen() {
+  Value *CondV = Cond->codegen();
+  if (!CondV)
+    return nullptr;
+
+  CondV = builder->CreateFCmpONE(CondV, ConstantFP::get(*context, APFloat(0.0)),
+                                 "ifcond");
+
+  Function *func = builder->GetInsertBlock()->getParent();
+
+  BasicBlock *ThenBB = BasicBlock::Create(*context, "then", func);
+  BasicBlock *ElseBB = BasicBlock::Create(*context, "else");
+  BasicBlock *MergeBB = BasicBlock::Create(*context, "ifcont");
+
+  // then
+  builder->CreateCondBr(CondV, ThenBB, ElseBB);
+  builder->SetInsertPoint(ThenBB);
+
+  Value *ThenV = Then->codegen();
+  if (!ThenV)
+    return nullptr;
+
+  builder->CreateBr(MergeBB);
+
+  ThenBB = builder->GetInsertBlock();
+
+  // else
+  func->insert(func->end(), ElseBB);
+  builder->SetInsertPoint(ElseBB);
+
+  Value *ElseV = Else->codegen();
+  if (!ElseV)
+    return nullptr;
+
+  builder->CreateBr(MergeBB);
+  ElseBB = builder->GetInsertBlock();
+
+  // Emit merge block.
+  func->insert(func->end(), MergeBB);
+  builder->SetInsertPoint(MergeBB);
+  PHINode *PN = builder->CreatePHI(Type::getDoubleTy(*context), 2, "iftmp");
+
+  PN->addIncoming(ThenV, ThenBB);
+  PN->addIncoming(ElseV, ElseBB);
+  return PN;
+}
+
+Value *WhileExprAST::codegen() {
+  Function *func = builder->GetInsertBlock()->getParent();
+  BasicBlock *LoopBB = BasicBlock::Create(*context, "loop", func);
+
+  // Insert an explicit fall through from the current block to the LoopBB.
+  builder->CreateBr(LoopBB);
+
+  // Start insertion in LoopBB.
+  builder->SetInsertPoint(LoopBB);
+
+  Value *CondV = Cond->codegen();
+  if (!CondV)
+    return nullptr;
+
+  CondV = builder->CreateFCmpONE(CondV, ConstantFP::get(*context, APFloat(0.0)),
+                                 "whilecond");
+
+  // Emit the body of the loop.  This, like any other expr, can change the
+  // current BB.  Note that we ignore the value computed by the body, but don't
+  // allow an error.
+  if (!Body->codegen())
+    return nullptr;
+
+  BasicBlock *AfterBB = BasicBlock::Create(*context, "afterloop", func);
+
+  // Insert the conditional branch into the end of LoopEndBB.
+  builder->CreateCondBr(CondV, LoopBB, AfterBB);
+
+  // Any new code will be inserted in AfterBB.
+  builder->SetInsertPoint(AfterBB);
+
+  // for expr always returns 0.0.
+  return Constant::getNullValue(Type::getDoubleTy(*context));
 }
 
 #endif

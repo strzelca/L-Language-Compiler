@@ -4,6 +4,7 @@
 #include "builder.h"
 #include "error_handler.h"
 #include "parser.h"
+#include <iostream>
 #include <llvm/IR/IRBuilder.h>
 
 static void HandleFunction() {

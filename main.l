@@ -1,7 +1,16 @@
-extern sin(x);
-
-function x(a) {
-  return (1+2+a)*(2+1+a);
+function fib(x) {
+  if (x < 3) {
+    return 1;
+  } else {
+    return fib(x-1)+fib(x-2);
+  }
 }
 
-sin(x(5));
+function loop(x) {
+  while (x < 10) {
+    printd(x);
+  }
+}
+
+loop(5);
+printd(fib(10));
