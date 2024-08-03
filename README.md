@@ -1,6 +1,6 @@
 # L Lanaguage Compiler
 
-The L Language Compiler compiles L source to an linkable object, or execute itself in a JIT Compiler Environment.
+The L Language Compiler compiles L source to an linkable object, or execute itself in a JIT Compiler Environment. 
 
 ### Language Syntax (EBNF)
 
