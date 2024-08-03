@@ -1,0 +1,57 @@
+PROGRAM = C;
+
+
+(* Commands *)
+C = nil | Id,"=",E | C,C | D,separator,C | if, "(",E,")", [else, "{",C,"}"] | while, "(",E,")" ,"{",C,"}" | return, E;
+
+(* Expressions *)
+E = v | Id | uop, E | E, bop, E | "(",E,")" | Id,"(",ae,")";
+
+(* Declarations *)
+D = nil | const, Id,[':',T], "=", E | var, Id,[':',T], "=", E | D,separator,D | function, Id,"(",form,")", ["->", T], "{",C,separator,return E,"}" | extern, E;
+
+
+(* Formal Arguments and Called Arguments *)
+form = nil | const, Id,[':',T], {form} | var, Id,[':',T], {form};
+ae   = nil | E,ae;
+
+
+(* Operators *)
+uop = "+" | "-" | "!";
+bop = "+" | "-" | "*" | "/" | "%" | "==" | "!=" | ">" | ">=" | "<" | "<=" | "&&" | "||";
+
+
+(* Separator *)
+separator = ';';
+
+
+(* Numeric and String values *)
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+       
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+symbol = "[" | "]" | "{" | "}" | "(" | ")" | "<" | ">"
+       | "'" | '"' | "=" | "|" | "." | "," | ";" | "-" 
+       | "+" | "*" | "?" | "\n" | "\t" | "\r" | "\f" | "\b" ;
+
+char = letter | digit | symbol | "_" | " " ;
+
+num     = digit, { digit } | digit, { digit },'.',digit, { digit };
+str     = '"' , { char - '"' }, '"';
+bool    = 'true' | 'false';
+v       = num | str | bool;
+
+
+(* Identifiers *)
+Id      = letter , { letter | digit | "_" } ;
+
+
+(* Types *)
+T       = 'Int' | 'Double' | 'Bool' | 'String';
